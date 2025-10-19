@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechNova Careers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      color: #111;
+      background-color: #fff;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 3rem;
+      border-bottom: 1px solid #eaeaea;
+      position: sticky;
+      top: 0;
+      background: #fff;
+      z-index: 10;
+    }
+
+    header .logo {
+      font-weight: 700;
+      font-size: 1.3rem;
+    }
+
+    header nav a {
+      margin-left: 1.5rem;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+    }
+
+    header nav a:hover {
+      color: #007aff;
+    }
+
+    /* Divisions Section */
+    .divisions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 4rem;
+      padding: 4rem 2rem 3rem 2rem;
+      background-color: #fafafa;
+      border-bottom: 1px solid #eee;
+    }
+
+    .division-card {
+      max-width: 340px;
+      text-align: left;
+    }
+
+    .division-card h3 {
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .division-card p {
+      color: #555;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .division-card a {
+      display: inline-block;
+      margin-top: 0.5rem;
+      color: #111;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid #111;
+      padding-bottom: 2px;
+    }
+
+    /* Careers Section */
+    .careers {
+      padding: 3rem 8%;
+    }
+
+    .careers h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .careers p.subtitle {
+      color: #555;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .job-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .job-table th {
+      text-align: left;
+      font-weight: 600;
+      color: #333;
+      border-bottom: 2px solid #eaeaea;
+      padding-bottom: 0.8rem;
+    }
+
+    .job-table td {
+      padding: 1.2rem 0;
+      border-bottom: 1px solid #eee;
+      vertical-align: top;
+    }
+
+    .job-title {
+      color: #007aff;
+      font-weight: 600;
+      font-size: 1.05rem;
+      text-decoration: none;
+    }
+
+    .job-title:hover {
+      text-decoration: underline;
+    }
+
+    .job-meta {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .apply-btn {
+      background-color: #000;
+      color: #fff;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .apply-btn:hover {
+      background-color: #007aff;
+    }
+
+    footer {
+      text-align: center;
+      color: #777;
+      padding: 2rem;
+      border-top: 1px solid #eee;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .divisions {
+        flex-direction: column;
+        align-items: center;
+      }
+      .job-table td, .job-table th {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">TechNova Careers</div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#divisions">Teams</a>
+      <a href="#careers">Open Roles</a>
+    </nav>
+  </header>
+
+  <section id="divisions" class="divisions">
+    <div class="division-card">
+      <h3>AI Research</h3>
+      <p>Our AI team is building next-gen models and intelligent systems that power global innovation.</p>
+      <a href="#">Learn more</a>
+    </div>
+    <div class="division-card">
+      <h3>Product Design</h3>
+      <p>We design delightful, accessible, and scalable experiences for millions of users every day.</p>
+      <a href="#">Learn more</a>
+    </div>
+    <div class="division-card">
+      <h3>Cloud Engineering</h3>
+      <p>We’re simplifying infrastructure scalability, bringing modern solutions to businesses worldwide.</p>
+      <a href="#">Learn more</a>
+    </div>
+  </section>
+
+  <section id="careers" class="careers">
+    <h2>Come reimagine with us</h2>
+    <p class="subtitle">747 open roles</p>
+
+    <table class="job-table">
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Sub-Team</th>
+          <th>Location</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="#" class="job-title">AI Engineer</a></td>
+          <td class="job-meta">Artificial Intelligence</td>
+          <td class="job-meta">Bangalore, India</td>
+          <td><a href="/apply" class="apply-btn">Apply Now</a></td>
+        </tr>
+        <tr>
+          <td><a href="#" class="job-title">Product Manager</a></td>
+          <td class="job-meta">Product</td>
+          <td class="job-meta">London, UK</td>
+          <td><a href="/apply" class="apply-btn">Apply Now</a></td>
+        </tr>
+        <tr>
+          <td><a href="#" class="job-title">Full Stack Developer</a></td>
+          <td class="job-meta">Engineering</td>
+          <td class="job-meta">Remote</td>
+          <td><a href="/apply" class="apply-btn">Apply Now</a></td>
+        </tr>
+        <tr>
+          <td><a href="#" class="job-title">UI/UX Designer</a></td>
+          <td class="job-meta">Design</td>
+          <td class="job-meta">New York, USA</td>
+          <td><a href="/apply" class="apply-btn">Apply Now</a></td>
+        </tr>
+        <tr>
+          <td><a href="#" class="job-title">Data Scientist</a></td>
+          <td class="job-meta">Analytics</td>
+          <td class="job-meta">Singapore</td>
+          <td><a href="/apply" class="apply-btn">Apply Now</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>
+    © 2025 TechNova Inc. | Building the future of innovation together.
+  </footer>
+</body>
+</html>

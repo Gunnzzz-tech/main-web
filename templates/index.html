@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Job Application Form Widget</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#083f57; /* deep teal blue */
+      --card:#ffffff;
+      --muted:#9aa8b0;
+      --accent:#ff951f; /* orange */
+      --input-border:#d7dbe0;
+      --card-width:520px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:'Open Sans',system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      background:var(--bg);
+      color:#213642;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:40px 20px;
+    }
+
+    .page-wrap{width:100%;max-width:1200px;}
+
+    .widget{
+      width:var(--card-width);
+      background:var(--card);
+      padding:32px 34px;
+      box-shadow:0 8px 30px rgba(0,0,0,0.25);
+      border-radius:4px;
+      margin:0 auto;
+      position:relative;
+    }
+
+    h1.title{
+      text-align:center;
+      color:#ffffff;
+      font-weight:600;
+      letter-spacing:0.5px;
+      margin-bottom:26px;
+      font-size:22px;
+    }
+
+    /* Outer container to mimic the design where the title sits above card */
+    .frame{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:16px;
+    }
+
+    .card-area{background:var(--card);border-radius:4px;padding:0;margin-top:0}
+
+    .form-title{
+      text-align:center;
+      font-size:20px;
+      color:#13323d;
+      margin:0 0 18px 0;
+      font-weight:600;
+    }
+
+    form{display:block}
+
+    .row{display:flex;gap:12px;margin-bottom:12px}
+    .row .col{flex:1}
+
+    label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+
+    input[type=text], input[type=email], input[type=tel], select, textarea{
+      width:100%;
+      padding:9px 10px;
+      border:1px solid var(--input-border);
+      border-radius:2px;
+      font-size:14px;
+      color:#22393f;
+      outline:none;
+      background:#fff;
+    }
+
+    textarea{min-height:96px;resize:vertical;padding:10px}
+
+    .single{margin-bottom:12px}
+
+    /* file input styling */
+    .file-row{display:flex;align-items:center;gap:12px}
+    .file-label{flex:1;font-size:13px;color:#6b6f73}
+    .file-input{position:relative;display:inline-block}
+    .file-input input[type=file]{display:none}
+    .btn-browse{
+      background:var(--accent);
+      color:#fff;padding:8px 12px;border-radius:4px;border:none;cursor:pointer;font-weight:600;
+      box-shadow:0 2px 0 rgba(0,0,0,0.08);
+    }
+
+    .hint{font-size:11px;color:#9aa8b0;margin-top:6px}
+
+    .actions{display:flex;gap:12px;justify-content:flex-end;margin-top:18px}
+    .btn{padding:10px 22px;border-radius:4px;border:none;font-weight:600;cursor:pointer}
+    .btn.reset{background:#f0f0f0;color:#333}
+    .btn.send{background:var(--accent);color:#fff}
+
+    footer.foot{width:100%;text-align:center;margin-top:22px;color:#c6d3d9;font-size:12px}
+
+    /* Outer background heading area */
+    .outer{
+      width:100%;display:flex;flex-direction:column;align-items:center
+    }
+    .outer .hero{width:100%;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+    .outer .hero h2{color:#fff;margin:0;font-weight:600;font-size:24px}
+
+    /* center the white card inside the hero area to match image */
+    .center-area{display:flex;align-items:center;justify-content:center;width:100%}
+
+    /* responsive */
+    @media (max-width:640px){
+      .widget{width:100%;padding:22px}
+      .row{flex-direction:column}
+      .actions{justify-content:space-between}
+    }
+  </style>
+</head>
+<body>
+  <div class="outer">
+    <div class="hero"><h2>Job Application Form Widget</h2></div>
+
+    <div class="center-area">
+      <div class="widget" style="max-width:520px;">
+        <div class="card-area">
+          <h3 class="form-title">&nbsp;</h3>
+          <form id="jobForm" action="{{ url_for('apply') }}" method="POST" enctype="multipart/form-data">
+
+    <div class="row">
+      <div class="col">
+        <label for="first">First name</label>
+        <input id="first" name="first_name" type="text" placeholder="First name" required>
+      </div>
+      <div class="col">
+        <label for="last">Last name</label>
+        <input id="last" name="last_name" type="text" placeholder="Last name" required>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="Email" required>
+      </div>
+      <div class="col">
+        <label for="phone">Phone</label>
+        <input id="phone" name="phone" type="tel" placeholder="Phone" required>
+      </div>
+    </div>
+
+    <div class="single">
+      <label for="country">Select country</label>
+      <select id="country" name="country" required>
+        <option value="">Choose country</option>
+        <option>United States</option>
+        <option>India</option>
+        <option>United Kingdom</option>
+        <option>Australia</option>
+      </select>
+    </div>
+
+    <div class="single">
+      <label for="city">City</label>
+      <input id="city" name="city" type="text" placeholder="City" required>
+    </div>
+
+    <div class="single">
+      <label for="address">Address</label>
+      <input id="address" name="address" type="text" placeholder="Address" required>
+    </div>
+
+    <div class="single">
+      <label for="position">Choose desired position</label>
+      <select id="position" name="position" required>
+        <option value="">Choose position</option>
+        <option>Full Stack Engineer</option>
+        <option>Product Manager</option>
+        <option>UI/UX Designer</option>
+      </select>
+    </div>
+
+    <div class="single">
+      <label for="info">Additional info</label>
+      <textarea id="info" name="additional_info" placeholder="Additional info"></textarea>
+    </div>
+
+    <div class="single">
+      <label>Add your CV</label>
+      <div class="file-row">
+        <div class="file-label">Only: pdf / doc. Size: less than 1 Mb</div>
+        <div class="file-input">
+          <label class="btn-browse" for="cv">Browse</label>
+          <input id="cv" name="resume" type="file" accept=".pdf,.doc,.docx" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn reset" type="button" onclick="document.getElementById('jobForm').reset();">Reset</button>
+      <button class="btn send" type="submit">Send</button>
+    </div>
+
+    <div class="hint">&nbsp;</div>
+
+</form>
+          <footer class="foot">© 2016 Job Application Form Widget. All Rights Reserved | Design by W3layouts</footer>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function handleSend(){
+      const form=document.getElementById('jobForm');
+      const fd=new FormData(form);
+      // simple demo: build an object to show
+      const out={};
+      for(const [k,v] of fd.entries()){
+        if(v instanceof File){
+          out[k]=v.name||'';
+        } else out[k]=v;
+      }
+      alert('Form submitted (demo)\n\n'+JSON.stringify(out, null, 2));
+    }
+  </script>
+</body>
+</html>
