@@ -37,16 +37,15 @@ def init_db():
 
 init_db()
 
-# Home page (dashboard)
+# --- Routes ---
+
 @app.route('/')
 def index():
     return render_template('home.html')
 
-# GET: show form, POST: submit form
 @app.route('/apply', methods=['GET', 'POST'])
 def apply():
     if request.method == 'GET':
-        # ✅ This part shows the form
         role = request.args.get('role', '')
         return render_template('index.html', selected_role=role)
 
@@ -63,21 +62,20 @@ def apply():
             additional_info = request.form.get('additional_info')
 
             file = request.files.get('resume')
-            if not file or file.filename == '':
-                flash('No resume file selected.')
-                return redirect(request.url)
+            resume_path = None
+            if file and file.filename:
+                filename = secure_filename(file.filename)
+                resume_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(resume_path)
 
-            filename = secure_filename(file.filename)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(file_path)
-
+            # Save to DB
             conn = sqlite3.connect(DB_PATH)
             c = conn.cursor()
             c.execute('''
                 INSERT INTO applicants 
                 (first_name, last_name, email, phone, country, city, address, position, additional_info, resume_path)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (first_name, last_name, email, phone, country, city, address, position, additional_info, file_path))
+            ''', (first_name, last_name, email, phone, country, city, address, position, additional_info, resume_path))
             conn.commit()
             conn.close()
 
@@ -87,6 +85,7 @@ def apply():
         except Exception as e:
             flash(f'Error: {e}')
             return redirect(url_for('apply'))
+
 @app.route('/success')
 def success():
     return render_template('success.html')
