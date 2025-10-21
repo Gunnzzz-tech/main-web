@@ -1,14 +1,119 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Application Submitted</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #083f57; /* deep teal blue */
+      --card: #ffffff;
+      --accent: #ff951f; /* orange */
+      --muted: #9aa8b0;
+      --card-width: 520px;
+    }
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Open Sans', system-ui, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      background: var(--bg);
+      color: #213642;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .outer {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero {
+      margin-bottom: 20px;
+    }
+
+    .hero h2 {
+      color: #fff;
+      font-size: 24px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .widget {
+      width: var(--card-width);
+      background: var(--card);
+      padding: 36px 34px;
+      border-radius: 4px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+      text-align: center;
+    }
+
+    .success-icon {
+      font-size: 50px;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+
+    h3 {
+      margin: 10px 0 12px;
+      font-size: 22px;
+      color: #13323d;
+      font-weight: 600;
+    }
+
+    p {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 26px;
+    }
+
+    .btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s ease;
+    }
+
+    .btn:hover {
+      background: #e27f17;
+    }
+
+    footer {
+      margin-top: 24px;
+      color: #c6d3d9;
+      font-size: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .widget { width: 100%; padding: 26px; }
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h2>🎉 Application Submitted!</h2>
-    <p>Thank you for applying. Our HR team will get back to you soon.</p>
-    <a href="/">Go back to Home</a>
+  <div class="outer">
+    <div class="hero">
+      <h2>Job Application Form Widget</h2>
+    </div>
+
+    <div class="widget">
+      <div class="success-icon">🎉</div>
+      <h3>Application Submitted!</h3>
+      <p>Thank you for applying. Our HR team will review your application and get back to you soon.</p>
+      <a href="/" class="btn">Go Back to Home</a>
+    </div>
+
+    <footer>© 2016 Job Application Form Widget. All Rights Reserved | Design by W3layouts</footer>
   </div>
 </body>
 </html>
