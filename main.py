@@ -1,119 +1,91 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
+from flask_sqlalchemy import SQLAlchemy
 import os
-import sqlite3
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
-# Upload folder
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+# --- File upload setup ---
+UPLOAD_FOLDER = os.path.join("instance", "uploads")
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# Database setup
-DB_PATH = 'job_portal.db'
+# --- Database setup ---
+DB_PATH = os.path.join("instance", "job_portal.db")
+os.makedirs("instance", exist_ok=True)  # ensure instance folder exists
 
-def init_db():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('''
-        CREATE TABLE IF NOT EXISTS applicants (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            first_name TEXT,
-            last_name TEXT,
-            email TEXT,
-            phone TEXT,
-            country TEXT,
-            city TEXT,
-            address TEXT,
-            position TEXT,
-            additional_info TEXT,
-            resume_path TEXT,
-            submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    ''')
-    conn.commit()
-    conn.close()
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{DB_PATH}"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 
-init_db()
+# --- Database Model ---
+class Applicant(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(100))
+    last_name = db.Column(db.String(100))
+    email = db.Column(db.String(150))
+    phone = db.Column(db.String(50))
+    country = db.Column(db.String(100))
+    city = db.Column(db.String(100))
+    address = db.Column(db.String(255))
+    position = db.Column(db.String(100))
+    additional_info = db.Column(db.Text)
+    resume_filename = db.Column(db.String(255))
+    submitted_at = db.Column(db.DateTime, server_default=db.func.now())
+
+with app.app_context():
+    db.create_all()
 
 # --- Routes ---
-
 @app.route('/')
 def index():
-    return render_template('home.html')
+    return render_template('index.html')
 
-@app.route('/apply', methods=['GET', 'POST'])
+@app.route('/apply', methods=['POST'])
 def apply():
-    if request.method == 'GET':
-        role = request.args.get('role', '')
-        return render_template('index.html', selected_role=role)
+    form = request.form
+    file = request.files.get('resume')
 
-    elif request.method == 'POST':
-        try:
-            first_name = request.form.get('first_name')
-            last_name = request.form.get('last_name')
-            email = request.form.get('email')
-            phone = request.form.get('phone')
-            country = request.form.get('country')
-            city = request.form.get('city')
-            address = request.form.get('address')
-            position = request.form.get('position')
-            additional_info = request.form.get('additional_info')
+    resume_filename = None
+    if file and file.filename:
+        resume_filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], resume_filename)
+        file.save(file_path)
+    else:
+        file_path = None
 
-            file = request.files.get('resume')
-            resume_path = None
-            if file and file.filename:
-                filename = secure_filename(file.filename)
-                resume_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(resume_path)
+    # Save to DB
+    applicant = Applicant(
+        first_name=form.get('first_name'),
+        last_name=form.get('last_name'),
+        email=form.get('email'),
+        phone=form.get('phone'),
+        country=form.get('country'),
+        city=form.get('city'),
+        address=form.get('address'),
+        position=form.get('position'),
+        additional_info=form.get('additional_info'),
+        resume_filename=resume_filename
+    )
+    db.session.add(applicant)
+    db.session.commit()
 
-            # Save to DB
-            conn = sqlite3.connect(DB_PATH)
-            c = conn.cursor()
-            c.execute('''
-                INSERT INTO applicants 
-                (first_name, last_name, email, phone, country, city, address, position, additional_info, resume_path)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (first_name, last_name, email, phone, country, city, address, position, additional_info, resume_path))
-            conn.commit()
-            conn.close()
-
-            flash('Application submitted successfully!')
-            return redirect(url_for('success'))
-
-        except Exception as e:
-            flash(f'Error: {e}')
-            return redirect(url_for('apply'))
+    flash("Application submitted successfully!")
+    return redirect(url_for('success'))
 
 @app.route('/success')
 def success():
     return render_template('success.html')
 
-
-# --- 🧾 Route to view all submitted applications ---
-# --- 🧾 Route to view all submitted applications (Website 1 / job_portal.db) ---
 @app.route('/applications')
 def view_applications():
-    # Connect to Website 1 database
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row  # Access columns by name
-    c = conn.cursor()
-
-    # Fetch all applicants, newest first
-    c.execute('SELECT * FROM applicants ORDER BY submitted_at DESC')
-    applications = c.fetchall()
-
-    conn.close()
-
-    # Render the applications.html template with fetched data
+    applications = Applicant.query.order_by(Applicant.submitted_at.desc()).all()
     return render_template('applications.html', applications=applications)
 
-# --- Serve uploaded resumes ---
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-
 
 if __name__ == '__main__':
     app.run(debug=True)
