@@ -10,4 +10,4 @@ mysql-connector-python==9.4.0
 PyMySQL==1.1.2
 SQLAlchemy==2.0.20
 flask_sqlalchemy==3.0.5
-playwright==1.38.1
+playwright==1.55.0
