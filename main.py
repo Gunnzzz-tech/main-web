@@ -13,12 +13,22 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # --- Database setup ---
 # --- Database setup ---
+# --- Database setup ---
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-DB_PATH = os.path.join(BASE_DIR, "job_portal.db")
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{DB_PATH}"
+INSTANCE_DIR = os.path.join(BASE_DIR, "instance")
+os.makedirs(INSTANCE_DIR, exist_ok=True)
 
+# Prefer instance/job_portal.db, fallback to root
+DB_PATH = os.path.join(INSTANCE_DIR, "job_portal.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{DB_PATH}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
+
+with app.app_context():
+    db.create_all()
+    print(f"✅ Database ready: {DB_PATH}")
+
 
 # --- Database Model ---
 class Applicant(db.Model):
@@ -41,39 +51,43 @@ with app.app_context():
 # --- Routes ---
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('home.html')
 
-@app.route('/apply', methods=['POST'])
+@app.route('/apply', methods=['POST', 'GET'])
 def apply():
-    form = request.form
-    file = request.files.get('resume')
+    if request.method == 'POST':
+        form = request.form
+        file = request.files.get('resume')
 
-    resume_filename = None
-    if file and file.filename:
-        resume_filename = secure_filename(file.filename)
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], resume_filename)
-        file.save(file_path)
-    else:
-        file_path = None
+        resume_filename = None
+        if file and file.filename:
+            resume_filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], resume_filename)
+            file.save(file_path)
+        else:
+            file_path = None
 
-    # Save to DB
-    applicant = Applicant(
-        first_name=form.get('first_name'),
-        last_name=form.get('last_name'),
-        email=form.get('email'),
-        phone=form.get('phone'),
-        country=form.get('country'),
-        city=form.get('city'),
-        address=form.get('address'),
-        position=form.get('position'),
-        additional_info=form.get('additional_info'),
-        resume_filename=resume_filename
-    )
-    db.session.add(applicant)
-    db.session.commit()
+        # Save to DB
+        applicant = Applicant(
+            first_name=form.get('first_name'),
+            last_name=form.get('last_name'),
+            email=form.get('email'),
+            phone=form.get('phone'),
+            country=form.get('country'),
+            city=form.get('city'),
+            address=form.get('address'),
+            position=form.get('position'),
+            additional_info=form.get('additional_info'),
+            resume_filename=resume_filename
+        )
+        db.session.add(applicant)
+        db.session.commit()
 
-    flash("Application submitted successfully!")
-    return redirect(url_for('success'))
+        flash("Application submitted successfully!")
+        return redirect(url_for('success'))
+
+    # If GET, just show the form
+    return render_template('index.html')
 
 @app.route('/success')
 def success():

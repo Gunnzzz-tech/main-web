@@ -30,7 +30,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for app in applicants %}
+            {% for app in applications %}
             <tr>
                 <td>{{ app.id }}</td>
                 <td>{{ app.first_name }} {{ app.last_name }}</td>
@@ -40,13 +40,17 @@
                 <td>{{ app.city }}</td>
                 <td>{{ app.country }}</td>
                 <td>
-                    {% if app.resume_path %}
-                        <a href="{{ url_for('static', filename='uploads/' + app.resume_path.split('/')[-1]) }}" target="_blank">View</a>
+                    {% if app.resume_filename %}
+                        <a href="{{ url_for('uploaded_file', filename=app.resume_filename) }}" target="_blank">View</a>
                     {% else %}
                         N/A
                     {% endif %}
                 </td>
                 <td>{{ app.submitted_at }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="9" style="text-align:center;">No applications submitted yet.</td>
             </tr>
             {% endfor %}
         </tbody>
