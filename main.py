@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
 import os
 import sqlite3
 from werkzeug.utils import secure_filename
@@ -89,6 +89,31 @@ def apply():
 @app.route('/success')
 def success():
     return render_template('success.html')
+
+
+# --- 🧾 Route to view all submitted applications ---
+# --- 🧾 Route to view all submitted applications (Website 1 / job_portal.db) ---
+@app.route('/applications')
+def view_applications():
+    # Connect to Website 1 database
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row  # Access columns by name
+    c = conn.cursor()
+
+    # Fetch all applicants, newest first
+    c.execute('SELECT * FROM applicants ORDER BY submitted_at DESC')
+    applications = c.fetchall()
+
+    conn.close()
+
+    # Render the applications.html template with fetched data
+    return render_template('applications.html', applications=applications)
+
+# --- Serve uploaded resumes ---
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
