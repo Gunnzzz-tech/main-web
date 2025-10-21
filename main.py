@@ -7,14 +7,12 @@ app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
 # --- File upload setup ---
-UPLOAD_FOLDER = os.path.join("instance", "uploads")
+UPLOAD_FOLDER = os.path.join("uploads")  # relative to project
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # --- Database setup ---
-DB_PATH = os.path.join("instance", "job_portal.db")
-os.makedirs("instance", exist_ok=True)  # ensure instance folder exists
-
+DB_PATH = "/Users/gungunbali/Py/google/job_portal.db"
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{DB_PATH}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -35,7 +33,7 @@ class Applicant(db.Model):
     submitted_at = db.Column(db.DateTime, server_default=db.func.now())
 
 with app.app_context():
-    db.create_all()
+    db.create_all()  # creates tables if not exist
 
 # --- Routes ---
 @app.route('/')
