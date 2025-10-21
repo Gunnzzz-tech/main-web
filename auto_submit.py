@@ -6,7 +6,7 @@ async def submit_to_second_site(applicant):
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
         page = await browser.new_page()
-        await page.goto("https://secondwebsite.com/apply", timeout=60000)
+        await page.goto("https://application-5-q86j.onrender.com/apply", timeout=60000)
 
         # Fill out the form fields (replace selectors with real ones)
         await page.fill("#first_name", applicant['first_name'])
