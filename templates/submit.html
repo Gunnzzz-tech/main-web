@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Submitted | Jobs Next Door</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <div class="page-wrapper">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-overlay">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+                     alt="Success background"
+                     class="hero-bg-image">
+            </div>
+
+            <div class="container hero-content">
+                <div class="hero-text">
+                    <i data-lucide="check-circle" class="hero-success-icon"></i>
+                    <h2 class="hero-title">Application Submitted Successfully!</h2>
+                    <p class="hero-description">
+                        Thank you for applying with <strong>Jobs Next Door</strong>.
+                        Our recruitment team has received your details and will contact you soon if your profile matches the requirements.
+                    </p>
+                    <div class="form-actions" style="margin-top: 2rem;">
+                        <a href="{{ url_for('index') }}" class="btn send">Go Back Home</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About / Message Section -->
+        <section class="about-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">What Happens Next?</h2>
+                    <p class="section-description">
+                        Our team carefully reviews every application to ensure the best possible match between candidates and our partner companies.
+                        You can expect to hear back from us typically within 3–5 business days.
+                    </p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon feature-icon-green">
+                            <i data-lucide="mail"></i>
+                        </div>
+                        <h3 class="feature-title">Email Confirmation</h3>
+                        <p class="feature-description">
+                            We’ve sent you a confirmation email with your submission details.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon feature-icon-blue">
+                            <i data-lucide="user-check"></i>
+                        </div>
+                        <h3 class="feature-title">Profile Review</h3>
+                        <p class="feature-description">
+                            Our recruiters will review your qualifications and experience.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon feature-icon-orange">
+                            <i data-lucide="calendar"></i>
+                        </div>
+                        <h3 class="feature-title">Interview Scheduling</h3>
+                        <p class="feature-description">
+                            If shortlisted, we’ll contact you to schedule an interview or assessment.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-column">
+                        <div class="footer-brand">
+                            <i data-lucide="briefcase" class="footer-icon"></i>
+                            <span class="footer-brand-text">Jobs Next Door</span>
+                        </div>
+                        <p class="footer-text">
+                            Your trusted partner in recruitment marketing, connecting talent with opportunity since 2010.
+                        </p>
+                    </div>
+
+                    <div class="footer-column">
+                        <h4 class="footer-heading">Contact Us</h4>
+                        <div class="footer-links">
+                            <p>Email: careers@jobsnextdoor.com</p>
+                            <p>Phone: 1-800-JOBS-NOW</p>
+                            <p>Available: Mon–Fri, 9AM–6PM</p>
+                        </div>
+                    </div>
+
+                    <div class="footer-column">
+                        <h4 class="footer-heading">Industries We Serve</h4>
+                        <ul class="footer-links">
+                            <li>Technology & IT</li>
+                            <li>Healthcare & Pharmaceuticals</li>
+                            <li>Manufacturing & Engineering</li>
+                            <li>Finance & Professional Services</li>
+                            <li>Construction & Skilled Trades</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <p>&copy; 2025 Jobs Next Door. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

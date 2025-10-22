@@ -1,249 +1,693 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TechNova Careers</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      margin: 0;
-      color: #111;
-      background-color: #fff;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 3rem;
-      border-bottom: 1px solid #eaeaea;
-      position: sticky;
-      top: 0;
-      background: #fff;
-      z-index: 10;
-    }
-
-    header .logo {
-      font-weight: 700;
-      font-size: 1.3rem;
-    }
-
-    header nav a {
-      margin-left: 1.5rem;
-      text-decoration: none;
-      color: #333;
-      font-weight: 500;
-    }
-
-    header nav a:hover {
-      color: #007aff;
-    }
-
-    /* Divisions Section */
-    .divisions {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 4rem;
-      padding: 4rem 2rem 3rem 2rem;
-      background-color: #fafafa;
-      border-bottom: 1px solid #eee;
-    }
-
-    .division-card {
-      max-width: 340px;
-      text-align: left;
-    }
-
-    .division-card h3 {
-      margin-top: 1rem;
-      margin-bottom: 0.5rem;
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-
-    .division-card p {
-      color: #555;
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-
-    .division-card a {
-      display: inline-block;
-      margin-top: 0.5rem;
-      color: #111;
-      text-decoration: none;
-      font-weight: 500;
-      border-bottom: 1px solid #111;
-      padding-bottom: 2px;
-    }
-
-    /* Careers Section */
-    .careers {
-      padding: 3rem 8%;
-    }
-
-    .careers h2 {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-
-    .careers p.subtitle {
-      color: #555;
-      font-size: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .job-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .job-table th {
-      text-align: left;
-      font-weight: 600;
-      color: #333;
-      border-bottom: 2px solid #eaeaea;
-      padding-bottom: 0.8rem;
-    }
-
-    .job-table td {
-      padding: 1.2rem 0;
-      border-bottom: 1px solid #eee;
-      vertical-align: top;
-    }
-
-    .job-title {
-      color: #007aff;
-      font-weight: 600;
-      font-size: 1.05rem;
-      text-decoration: none;
-    }
-
-    .job-title:hover {
-      text-decoration: underline;
-    }
-
-    .job-meta {
-      color: #666;
-      font-size: 0.95rem;
-    }
-
-    .apply-btn {
-      background-color: #000;
-      color: #fff;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 4px;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-    }
-
-    .apply-btn:hover {
-      background-color: #007aff;
-    }
-
-    footer {
-      text-align: center;
-      color: #777;
-      padding: 2rem;
-      border-top: 1px solid #eee;
-      font-size: 0.9rem;
-    }
-
-    @media (max-width: 768px) {
-      .divisions {
-        flex-direction: column;
-        align-items: center;
-      }
-      .job-table td, .job-table th {
-        font-size: 0.9rem;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- Lucide Icons via CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-  <header>
-    <div class="logo">TechNova Careers</div>
-    <nav>
-      <a href="#">Home</a>
-      <a href="#divisions">Teams</a>
-      <a href="#careers">Open Roles</a>
-    </nav>
-  </header>
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
 
-  <section id="divisions" class="divisions">
-    <div class="division-card">
-      <h3>AI Research</h3>
-      <p>Our AI team is building next-gen models and intelligent systems that power global innovation.</p>
-      <a href="#">Learn more</a>
+    <div class="page-wrapper">
+        <!-- Header -->
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-overlay">
+                <img src="https://images.unsplash.com/photo-1683770997177-0603bd44d070?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBvZmZpY2UlMjB0ZWFtfGVufDF8fHx8MTc2MTA1MTgzMnww&ixlib=rb-4.1.0&q=80&w=1080"
+                     alt="Professional team"
+                     class="hero-bg-image">
+            </div>
+
+            <div class="container hero-content">
+                <div class="hero-text">
+                    <h2 class="hero-title">Your Career Partner in Recruitment</h2>
+                    <p class="hero-description">
+                        Jobs Next Door is a leading recruitment marketing company specializing in connecting exceptional talent with top-tier companies. We bridge the gap between corporates and candidates across white-collar, grey-collar, and blue-collar industries.
+                    </p>
+
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-icon stat-icon-blue">
+                                <i data-lucide="users"></i>
+                            </div>
+                            <div>
+                                <div class="stat-number">10,000+</div>
+                                <div class="stat-label">Candidates Placed</div>
+                            </div>
+                        </div>
+
+                        <div class="stat-item">
+                            <div class="stat-icon stat-icon-blue">
+                                <i data-lucide="building-2"></i>
+                            </div>
+                            <div>
+                                <div class="stat-number">500+</div>
+                                <div class="stat-label">Partner Companies</div>
+                            </div>
+                        </div>
+
+                        <div class="stat-item">
+                            <div class="stat-icon stat-icon-blue">
+                                <i data-lucide="award"></i>
+                            </div>
+                            <div>
+                                <div class="stat-number">15+ Years</div>
+                                <div class="stat-label">Industry Experience</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Why Choose Jobs Next Door?</h2>
+                    <p class="section-description">
+                        We don't just fill positions – we build careers. As a recruitment marketing company, we act as the trusted middle-man between leading corporates and skilled professionals, ensuring the perfect match for both parties.
+                    </p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon feature-icon-blue">
+                            <i data-lucide="briefcase"></i>
+                        </div>
+                        <h3 class="feature-title">White-Collar Roles</h3>
+                        <p class="feature-description">
+                            Executive positions, management roles, and professional services across finance, technology, healthcare, and more.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon feature-icon-green">
+                            <i data-lucide="users"></i>
+                        </div>
+                        <h3 class="feature-title">Grey-Collar Roles</h3>
+                        <p class="feature-description">
+                            Skilled technical positions, IT specialists, healthcare workers, and professionals in hybrid roles.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon feature-icon-orange">
+                            <i data-lucide="building-2"></i>
+                        </div>
+                        <h3 class="feature-title">Blue-Collar Roles</h3>
+                        <p class="feature-description">
+                            Manufacturing, construction, logistics, skilled trades, and essential workforce positions.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Application Form Section -->
+        <section class="form-section">
+            <div class="container">
+                <div class="form-card">
+                    <div class="form-header">
+                        <h2 class="form-title">Apply for a Position</h2>
+                        <p class="form-description">
+                            Fill out the form below to submit your application. We connect talented professionals with leading companies across all industries.
+                        </p>
+                    </div>
+
+                    <form id="jobForm" class="application-form" enctype="multipart/form-data">
+                        <!-- Personal Information -->
+                        <div class="form-section-group">
+                            <h3 class="form-section-title">Personal Information</h3>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="first" class="form-label">First name *</label>
+                                    <input
+                                        type="text"
+                                        id="first"
+                                        name="first_name"
+                                        class="form-input"
+                                        placeholder="First name"
+                                        required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="last" class="form-label">Last name *</label>
+                                    <input
+                                        type="text"
+                                        id="last"
+                                        name="last_name"
+                                        class="form-input"
+                                        placeholder="Last name"
+                                        required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email *</label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    class="form-input"
+                                    placeholder="Email"
+                                    required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone" class="form-label">Phone *</label>
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    name="phone"
+                                    class="form-input"
+                                    placeholder="Phone"
+                                    required>
+                            </div>
+                        </div>
+
+                        <!-- Location Information -->
+                        <div class="form-section-group">
+                            <h3 class="form-section-title">Location</h3>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="country" class="form-label">Country *</label>
+                                    <select id="country" name="country" class="form-select" required>
+                                        <option value="">Choose country</option>
+                                        <option>United States</option>
+                                        <option>India</option>
+                                        <option>United Kingdom</option>
+                                        <option>Australia</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="city" class="form-label">City *</label>
+                                    <input
+                                        type="text"
+                                        id="city"
+                                        name="city"
+                                        class="form-input"
+                                        placeholder="City"
+                                        required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="address" class="form-label">Address *</label>
+                                <input
+                                    type="text"
+                                    id="address"
+                                    name="address"
+                                    class="form-input"
+                                    placeholder="Address"
+                                    required>
+                            </div>
+                        </div>
+
+                        <!-- Position Information -->
+                        <div class="form-section-group">
+                            <h3 class="form-section-title">Position Details</h3>
+
+                            <div class="form-group">
+                                <label for="position" class="form-label">Position applying for *</label>
+                                <select id="position" name="position" class="form-select" required>
+                                    <option value="">Choose position</option>
+                                    <option>Full Stack Engineer</option>
+                                    <option>Product Manager</option>
+                                    <option>UI/UX Designer</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="info" class="form-label">Additional information</label>
+                                <textarea
+                                    id="info"
+                                    name="additional_info"
+                                    class="form-textarea"
+                                    placeholder="Additional info"
+                                    rows="4"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="cv" class="form-label">Resume / CV *</label>
+                                <input
+                                    type="file"
+                                    id="cv"
+                                    name="resume"
+                                    accept=".pdf,.doc,.docx"
+                                    class="file-input"
+                                    required>
+                                <label for="cv" class="file-label" id="fileLabel">
+                                    <i data-lucide="upload" class="file-icon"></i>
+                                    <span id="fileName">Click to upload your resume (PDF, DOC, DOCX)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <button type="button" class="btn reset" id="resetBtn">Reset</button>
+                            <button type="submit" class="btn send" id="submitBtn">
+                                <span id="submitText">Send</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-column">
+                        <div class="footer-brand">
+                            <i data-lucide="briefcase" class="footer-icon"></i>
+                            <span class="footer-brand-text">Jobs Next Door</span>
+                        </div>
+                        <p class="footer-text">
+                            Your trusted partner in recruitment marketing, connecting talent with opportunity since 2010.
+                        </p>
+                    </div>
+
+                    <div class="footer-column">
+                        <h4 class="footer-heading">Contact Us</h4>
+                        <div class="footer-links">
+                            <p>Email: careers@jobsnextdoor.com</p>
+                            <p>Phone: 1-800-JOBS-NOW</p>
+                            <p>Available: Mon-Fri, 9AM-6PM</p>
+                        </div>
+                    </div>
+
+                    <div class="footer-column">
+                        <h4 class="footer-heading">Industries We Serve</h4>
+                        <ul class="footer-links">
+                            <li>Technology & IT</li>
+                            <li>Healthcare & Pharmaceuticals</li>
+                            <li>Manufacturing & Engineering</li>
+                            <li>Finance & Professional Services</li>
+                            <li>Construction & Skilled Trades</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <p>&copy; 2025 Jobs Next Door. All rights reserved. We are a recruitment marketing company and do not directly employ candidates.</p>
+                </div>
+            </div>
+        </footer>
     </div>
-    <div class="division-card">
-      <h3>Product Design</h3>
-      <p>We design delightful, accessible, and scalable experiences for millions of users every day.</p>
-      <a href="#">Learn more</a>
-    </div>
-    <div class="division-card">
-      <h3>Cloud Engineering</h3>
-      <p>We’re simplifying infrastructure scalability, bringing modern solutions to businesses worldwide.</p>
-      <a href="#">Learn more</a>
-    </div>
-  </section>
 
-  <section id="careers" class="careers">
-    <h2>Come reimagine with us</h2>
-    <p class="subtitle">747 open roles</p>
-
-    <table class="job-table">
-      <thead>
-        <tr>
-          <th>Role</th>
-          <th>Sub-Team</th>
-          <th>Location</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><a href="#" class="job-title">AI Engineer</a></td>
-          <td class="job-meta">Artificial Intelligence</td>
-          <td class="job-meta">Bangalore, India</td>
-          <td><a href="https://application-5-q86j.onrender.com/" class="apply-btn" target="_blank">Apply Now</a></td>
-        </tr>
-        <tr>
-          <td><a href="#" class="job-title">Product Manager</a></td>
-          <td class="job-meta">Product</td>
-          <td class="job-meta">London, UK</td>
-          <td><a href="https://application-5-q86j.onrender.com/" class="apply-btn" target="_blank">Apply Now</a></td>
-        </tr>
-        <tr>
-          <td><a href="#" class="job-title">Full Stack Developer</a></td>
-          <td class="job-meta">Engineering</td>
-          <td class="job-meta">Remote</td>
-          <td><a href="https://application-5-q86j.onrender.com/" class="apply-btn" target="_blank">Apply Now</a></td>
-        </tr>
-        <tr>
-          <td><a href="#" class="job-title">UI/UX Designer</a></td>
-          <td class="job-meta">Design</td>
-          <td class="job-meta">New York, USA</td>
-          <td><a href="https://application-5-q86j.onrender.com/" class="apply-btn" target="_blank">Apply Now</a></td>
-        </tr>
-        <tr>
-          <td><a href="#" class="job-title">Data Scientist</a></td>
-          <td class="job-meta">Analytics</td>
-          <td class="job-meta">Singapore</td>
-          <td><a href="https://application-5-q86j.onrender.com/" class="apply-btn" target="_blank">Apply Now</a></td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <footer>
-    © 2025 TechNova Inc. | Building the future of innovation together.
-  </footer>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
 </body>
 </html>
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--  <title>Jobs Next Door</title>-->
+<!--  <style>-->
+<!--    /* Reset some default styles */-->
+<!--    * {-->
+<!--      margin: 0;-->
+<!--      padding: 0;-->
+<!--      box-sizing: border-box;-->
+<!--      font-family: Arial, sans-serif;-->
+<!--    }-->
+
+<!--    body {-->
+<!--      min-height: 100vh;-->
+<!--      background: linear-gradient(to bottom right, #f9fafb, #ebf8ff);-->
+<!--      color: #333;-->
+<!--    }-->
+
+<!--    a {-->
+<!--      text-decoration: none;-->
+<!--      color: inherit;-->
+<!--    }-->
+
+<!--    .container {-->
+<!--      max-width: 1200px;-->
+<!--      margin: 0 auto;-->
+<!--      padding: 0 16px;-->
+<!--    }-->
+
+<!--    /* Header */-->
+<!--    header {-->
+<!--      background: #fff;-->
+<!--      border-bottom: 1px solid #e5e7eb;-->
+<!--      position: sticky;-->
+<!--      top: 0;-->
+<!--      z-index: 50;-->
+<!--      box-shadow: 0 1px 2px rgba(0,0,0,0.05);-->
+<!--    }-->
+
+<!--    header .header-inner {-->
+<!--      display: flex;-->
+<!--      align-items: center;-->
+<!--      gap: 12px;-->
+<!--      padding: 16px 0;-->
+<!--    }-->
+
+<!--    header h1 {-->
+<!--      font-size: 1.5rem;-->
+<!--      color: #111827;-->
+<!--    }-->
+
+<!--    header p {-->
+<!--      font-size: 0.875rem;-->
+<!--      color: #6b7280;-->
+<!--    }-->
+
+<!--    .icon {-->
+<!--      display: inline-flex;-->
+<!--      width: 32px;-->
+<!--      height: 32px;-->
+<!--      color: #2563eb;-->
+<!--    }-->
+
+<!--    /* Hero Section */-->
+<!--    .hero {-->
+<!--      position: relative;-->
+<!--      background: linear-gradient(to right, #2563eb, #1e40af);-->
+<!--      color: #fff;-->
+<!--      overflow: hidden;-->
+<!--    }-->
+
+<!--    .hero img.bg-image {-->
+<!--      position: absolute;-->
+<!--      inset: 0;-->
+<!--      width: 100%;-->
+<!--      height: 100%;-->
+<!--      object-fit: cover;-->
+<!--      opacity: 0.1;-->
+<!--    }-->
+
+<!--    .hero .hero-content {-->
+<!--      position: relative;-->
+<!--      max-width: 960px;-->
+<!--      margin: 0 auto;-->
+<!--      padding: 64px 16px;-->
+<!--    }-->
+
+<!--    .hero h2 {-->
+<!--      font-size: 2rem;-->
+<!--      margin-bottom: 16px;-->
+<!--    }-->
+
+<!--    .hero p {-->
+<!--      color: #bfdbfe;-->
+<!--      font-size: 1.125rem;-->
+<!--      margin-bottom: 32px;-->
+<!--    }-->
+
+<!--    .stats {-->
+<!--      display: grid;-->
+<!--      grid-template-columns: 1fr;-->
+<!--      gap: 24px;-->
+<!--    }-->
+
+<!--    @media (min-width: 640px) {-->
+<!--      .stats {-->
+<!--        grid-template-columns: repeat(3, 1fr);-->
+<!--      }-->
+<!--    }-->
+
+<!--    .stat-item {-->
+<!--      display: flex;-->
+<!--      align-items: flex-start;-->
+<!--      gap: 12px;-->
+<!--    }-->
+
+<!--    .stat-icon {-->
+<!--      background: #3b82f6;-->
+<!--      border-radius: 0.5rem;-->
+<!--      padding: 8px;-->
+<!--      display: flex;-->
+<!--      align-items: center;-->
+<!--      justify-content: center;-->
+<!--      width: 32px;-->
+<!--      height: 32px;-->
+<!--      color: white;-->
+<!--    }-->
+
+<!--    .stat-item div:first-child {-->
+<!--      font-weight: bold;-->
+<!--      font-size: 1rem;-->
+<!--    }-->
+
+<!--    .stat-item div:last-child {-->
+<!--      font-size: 0.875rem;-->
+<!--      color: #bfdbfe;-->
+<!--    }-->
+
+<!--    /* About Section */-->
+<!--    .about {-->
+<!--      padding: 48px 16px;-->
+<!--    }-->
+
+<!--    .about .section-title {-->
+<!--      text-align: center;-->
+<!--      margin-bottom: 32px;-->
+<!--    }-->
+
+<!--    .about .section-title h2 {-->
+<!--      font-size: 1.5rem;-->
+<!--      margin-bottom: 8px;-->
+<!--    }-->
+
+<!--    .about .section-title p {-->
+<!--      color: #6b7280;-->
+<!--    }-->
+
+<!--    .role-cards {-->
+<!--      display: grid;-->
+<!--      grid-template-columns: 1fr;-->
+<!--      gap: 24px;-->
+<!--      margin-bottom: 64px;-->
+<!--    }-->
+
+<!--    @media (min-width: 768px) {-->
+<!--      .role-cards {-->
+<!--        grid-template-columns: repeat(3, 1fr);-->
+<!--      }-->
+<!--    }-->
+
+<!--    .role-card {-->
+<!--      background: #fff;-->
+<!--      padding: 24px;-->
+<!--      border-radius: 0.5rem;-->
+<!--      box-shadow: 0 1px 3px rgba(0,0,0,0.1);-->
+<!--      border: 1px solid #e5e7eb;-->
+<!--    }-->
+
+<!--    .role-icon {-->
+<!--      background: #dbeafe;-->
+<!--      width: 48px;-->
+<!--      height: 48px;-->
+<!--      display: flex;-->
+<!--      align-items: center;-->
+<!--      justify-content: center;-->
+<!--      border-radius: 0.5rem;-->
+<!--      margin-bottom: 16px;-->
+<!--    }-->
+
+<!--    .role-card h3 {-->
+<!--      font-size: 1.125rem;-->
+<!--      margin-bottom: 8px;-->
+<!--      color: #111827;-->
+<!--    }-->
+
+<!--    .role-card p {-->
+<!--      color: #6b7280;-->
+<!--      font-size: 0.875rem;-->
+<!--    }-->
+
+<!--    /* Application Form */-->
+<!--    .application-section {-->
+<!--      padding: 48px 16px 96px;-->
+<!--    }-->
+
+<!--    /* Footer */-->
+<!--    footer {-->
+<!--      background: #111827;-->
+<!--      color: #d1d5db;-->
+<!--      padding: 48px 16px;-->
+<!--    }-->
+
+<!--    footer a {-->
+<!--      color: inherit;-->
+<!--    }-->
+
+<!--    .footer-grid {-->
+<!--      display: grid;-->
+<!--      grid-template-columns: 1fr;-->
+<!--      gap: 32px;-->
+<!--      margin-bottom: 32px;-->
+<!--    }-->
+
+<!--    @media (min-width: 768px) {-->
+<!--      .footer-grid {-->
+<!--        grid-template-columns: repeat(3, 1fr);-->
+<!--      }-->
+<!--    }-->
+
+<!--    .footer h4 {-->
+<!--      color: #fff;-->
+<!--      margin-bottom: 16px;-->
+<!--    }-->
+
+<!--    .footer p, .footer li {-->
+<!--      font-size: 0.875rem;-->
+<!--      color: #9ca3af;-->
+<!--      margin-bottom: 4px;-->
+<!--    }-->
+
+<!--    .footer .footer-bottom {-->
+<!--      border-top: 1px solid #1f2937;-->
+<!--      padding-top: 16px;-->
+<!--      text-align: center;-->
+<!--      font-size: 0.75rem;-->
+<!--      color: #6b7280;-->
+<!--    }-->
+<!--  </style>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--  &lt;!&ndash; Header &ndash;&gt;-->
+<!--  <header>-->
+<!--    <div class="container header-inner">-->
+<!--      <div class="icon">💼</div>-->
+<!--      <div>-->
+<!--        <h1>Jobs Next Door</h1>-->
+<!--        <p>Connecting Talent with Opportunity</p>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </header>-->
+
+<!--  &lt;!&ndash; Hero Section &ndash;&gt;-->
+<!--  <section class="hero">-->
+<!--    <img class="bg-image" src="https://images.unsplash.com/photo-1683770997177-0603bd44d070?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBvZmZpY2UlMjB0ZWFtfGVufDF8fHx8MTc2MTA1MTgzMnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" alt="Professional team">-->
+<!--    <div class="hero-content">-->
+<!--      <h2>Your Career Partner in Recruitment</h2>-->
+<!--      <p>Jobs Next Door is a leading recruitment marketing company specializing in connecting exceptional talent with top-tier companies. We bridge the gap between corporates and candidates across white-collar, grey-collar, and blue-collar industries.</p>-->
+
+<!--      <div class="stats">-->
+<!--        <div class="stat-item">-->
+<!--          <div class="stat-icon">👥</div>-->
+<!--          <div>-->
+<!--            <div>10,000+</div>-->
+<!--            <div>Candidates Placed</div>-->
+<!--          </div>-->
+<!--        </div>-->
+
+<!--        <div class="stat-item">-->
+<!--          <div class="stat-icon">🏢</div>-->
+<!--          <div>-->
+<!--            <div>500+</div>-->
+<!--            <div>Partner Companies</div>-->
+<!--          </div>-->
+<!--        </div>-->
+
+<!--        <div class="stat-item">-->
+<!--          <div class="stat-icon">🏆</div>-->
+<!--          <div>-->
+<!--            <div>15+ Years</div>-->
+<!--            <div>Industry Experience</div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </section>-->
+
+<!--  &lt;!&ndash; About Section &ndash;&gt;-->
+<!--  <section class="about">-->
+<!--    <div class="section-title">-->
+<!--      <h2>Why Choose Jobs Next Door?</h2>-->
+<!--      <p>We don't just fill positions – we build careers. As a recruitment marketing company, we act as the trusted middle-man between leading corporates and skilled professionals, ensuring the perfect match for both parties.</p>-->
+<!--    </div>-->
+
+<!--    <div class="role-cards">-->
+<!--      <div class="role-card">-->
+<!--        <div class="role-icon">💼</div>-->
+<!--        <h3>White-Collar Roles</h3>-->
+<!--        <p>Executive positions, management roles, and professional services across finance, technology, healthcare, and more.</p>-->
+<!--      </div>-->
+
+<!--      <div class="role-card">-->
+<!--        <div class="role-icon">👥</div>-->
+<!--        <h3>Grey-Collar Roles</h3>-->
+<!--        <p>Skilled technical positions, IT specialists, healthcare workers, and professionals in hybrid roles.</p>-->
+<!--      </div>-->
+
+<!--      <div class="role-card">-->
+<!--        <div class="role-icon">🏢</div>-->
+<!--        <h3>Blue-Collar Roles</h3>-->
+<!--        <p>Manufacturing, construction, logistics, skilled trades, and essential workforce positions.</p>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </section>-->
+
+<!--  &lt;!&ndash; Application Form Section &ndash;&gt;-->
+<!--  <section class="application-section">-->
+<!--    &lt;!&ndash; You can embed your form here &ndash;&gt;-->
+<!--    <form>-->
+<!--      <input type="text" placeholder="Name" /><br /><br />-->
+<!--      <input type="email" placeholder="Email" /><br /><br />-->
+<!--      <textarea placeholder="Your Message"></textarea><br /><br />-->
+<!--      <button type="submit">Submit</button>-->
+<!--    </form>-->
+<!--  </section>-->
+
+<!--  &lt;!&ndash; Footer &ndash;&gt;-->
+<!--  <footer>-->
+<!--    <div class="container footer">-->
+<!--      <div class="footer-grid">-->
+<!--        <div>-->
+<!--          <div class="flex items-center gap-2 mb-4">-->
+<!--            <span class="icon">💼</span>-->
+<!--            <span>Jobs Next Door</span>-->
+<!--          </div>-->
+<!--          <p>Your trusted partner in recruitment marketing, connecting talent with opportunity since 2010.</p>-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--          <h4>Contact Us</h4>-->
+<!--          <p>Email: careers@jobsnextdoor.com</p>-->
+<!--          <p>Phone: 1-800-JOBS-NOW</p>-->
+<!--          <p>Available: Mon-Fri, 9AM-6PM</p>-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--          <h4>Industries We Serve</h4>-->
+<!--          <ul>-->
+<!--            <li>Technology & IT</li>-->
+<!--            <li>Healthcare & Pharmaceuticals</li>-->
+<!--            <li>Manufacturing & Engineering</li>-->
+<!--            <li>Finance & Professional Services</li>-->
+<!--            <li>Construction & Skilled Trades</li>-->
+<!--          </ul>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="footer-bottom">-->
+<!--        &copy; 2025 Jobs Next Door. All rights reserved. We are a recruitment marketing company and do not directly employ candidates.-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </footer>-->
+
+<!--</body>-->
+<!--</html>-->
