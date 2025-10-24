@@ -17,11 +17,8 @@ const fileNameSpan = document.getElementById('fileName');
 fileInput.addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
-        const iconHtml = '<i data-lucide="check-circle-2" class="file-icon"></i>';
         fileNameSpan.textContent = file.name;
         fileLabel.classList.add('has-file');
-
-        // Re-initialize Lucide icons for the new icon
         lucide.createIcons();
     }
 });
@@ -35,8 +32,24 @@ resetBtn.addEventListener('click', function() {
     fileNameSpan.textContent = 'Click to upload your resume (PDF, DOC, DOCX)';
     fileLabel.classList.remove('has-file');
     showToast('Form cleared', 'info');
-
-    // Re-initialize Lucide icons
     lucide.createIcons();
+
+    // ✅ Optional GA tracking
+    if (typeof gtag === 'function') {
+        gtag('event', 'form_reset', {
+            'event_category': 'Form',
+            'event_label': 'Application Form Reset'
+        });
+    }
+});
+
+// ✅ Simple submit (redirect handled by Flask)
+jobForm.addEventListener('submit', () => {
+    if (typeof gtag === 'function') {
+        gtag('event', 'form_submission', {
+            'event_category': 'Form',
+            'event_label': 'Application Submitted'
+        });
+    }
 });
 

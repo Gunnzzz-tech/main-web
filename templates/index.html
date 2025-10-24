@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- ✅ Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7F1WP8JXBL"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-7F1WP8JXBL');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
@@ -315,6 +324,25 @@
     <script>
         // Initialize Lucide icons
         lucide.createIcons();
+
+        // ✅ Google Analytics event tracking for the Send button
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.addEventListener('click', () => {
+            gtag('event', 'submit_application', {
+                'event_category': 'Form',
+                'event_label': 'Job Application Submitted',
+                'value': 1
+            });
+        });
+
+        // Optional: Track form reset
+        const resetBtn = document.getElementById('resetBtn');
+        resetBtn.addEventListener('click', () => {
+            gtag('event', 'form_reset', {
+                'event_category': 'Form',
+                'event_label': 'Application Form Reset'
+            });
+        });
     </script>
 </body>
 </html>
