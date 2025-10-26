@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, sen
 from flask_sqlalchemy import SQLAlchemy
 import os
 from werkzeug.utils import secure_filename
+from urllib.parse import urlencode
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
@@ -40,6 +41,24 @@ with app.app_context():
     db.create_all()
     print(f"✅ Database ready: {DB_PATH}")
 
+# --- Helper to preserve campaign/query params ---
+def preserve_params(default_url='/', extra_params=None):
+    """
+    Returns a redirect URL that preserves gclid and utm_* parameters.
+    """
+    params = {}
+    # Keep gclid & utm parameters
+    for key, value in request.args.items():
+        if key.startswith('utm_') or key == 'gclid':
+            params[key] = value
+    # Add any extra params
+    if extra_params:
+        params.update(extra_params)
+    # Build URL
+    if params:
+        return f"{default_url}?{urlencode(params)}"
+    return default_url
+
 # --- Routes ---
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -72,16 +91,27 @@ def index():
         db.session.commit()
 
         flash("Application submitted successfully!")
-        return redirect(url_for('submit'))
+        return redirect(preserve_params(url_for('submit')))
 
-    # If GET, just show the form
-    return render_template('index.html')
+    # Pass current params to template if needed (for forms, hidden inputs, etc.)
+    return render_template('index.html', query_params=request.args)
 
+# --- Terms Pages ---
+@app.route('/terms/data-collection')
+def terms_data_collection():
+    return render_template('terms_data_collection.html', query_params=request.args)
+
+@app.route('/terms/communication')
+def terms_communication():
+    return render_template('terms_communication.html', query_params=request.args)
+
+@app.route('/terms/recruitment')
+def terms_recruitment():
+    return render_template('terms_recruitment.html', query_params=request.args)
 
 @app.route('/submit')
 def submit():
-    return render_template('submit.html')
-
+    return render_template('submit.html', query_params=request.args)
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
@@ -89,9 +119,9 @@ def uploaded_file(filename):
 
 @app.route('/applications')
 def applications():
-    # Fetch all applicants from the database, ordered by submission time descending
     all_applicants = Applicant.query.order_by(Applicant.submitted_at.desc()).all()
-    return render_template('applications.html', applicants=all_applicants)
+    return render_template('applications.html', applicants=all_applicants, query_params=request.args)
 
+# --- Run App ---
 if __name__ == '__main__':
     app.run(debug=True)

@@ -266,6 +266,39 @@
                             </div>
                         </div>
 
+                                                <!-- Terms and Conditions Section -->
+                                               <!-- Terms and Conditions Section -->
+                        <div class="terms-checkbox-group">
+                            <div class="terms-checkbox-item">
+                                <input type="checkbox" id="terms1" name="terms1" class="terms-checkbox" required>
+                                <label for="terms1" class="terms-label">
+                                    I agree to the
+                                    <a href="{{ url_for('terms_data_collection') }}" class="terms-link" target="_blank" id="termsLink1">
+                                        Data Collection and Privacy Policy
+                                    </a>
+                                </label>
+                            </div>
+
+                            <div class="terms-checkbox-item">
+                                <input type="checkbox" id="terms2" name="terms2" class="terms-checkbox" required>
+                                <label for="terms2" class="terms-label">
+                                    I consent to the
+                                    <a href="{{ url_for('terms_communication') }}" class="terms-link" target="_blank" id="termsLink2">
+                                        Communication and Contact Terms
+                                    </a>
+                                </label>
+                            </div>
+
+                            <div class="terms-checkbox-item">
+                                <input type="checkbox" id="terms3" name="terms3" class="terms-checkbox" required>
+                                <label for="terms3" class="terms-label">
+                                    I accept the
+                                    <a href="{{ url_for('terms_recruitment') }}" class="terms-link" target="_blank" id="termsLink3">
+                                        Recruitment Process and Job Matching Terms
+                                    </a>
+                                </label>
+                            </div>
+                        </div>
                         <!-- Form Actions -->
                         <div class="form-actions">
                             <button type="button" class="btn reset" id="resetBtn">Reset</button>
@@ -342,6 +375,64 @@
                 'event_category': 'Form',
                 'event_label': 'Application Form Reset'
             });
+        });
+
+        // ✅ Terms and Conditions GA4 Tracking
+        const termsLinks = document.querySelectorAll('.terms-link');
+        termsLinks.forEach((link, index) => {
+            link.addEventListener('click', (e) => {
+                const termsType = link.getAttribute('href').split('#')[1];
+                gtag('event', 'terms_view', {
+                    'event_category': 'Terms & Conditions',
+                    'event_label': `Viewed ${termsType} terms`,
+                    'link_id': `terms${index + 1}`
+                });
+
+                // Optional: Open in same tab instead of new tab
+                // e.preventDefault();
+                // window.location.href = link.href;
+            });
+        });
+
+        // ✅ Track terms checkbox interactions
+        const termsCheckboxes = document.querySelectorAll('.terms-checkbox');
+        termsCheckboxes.forEach((checkbox, index) => {
+            checkbox.addEventListener('change', (e) => {
+                const action = e.target.checked ? 'accepted' : 'unchecked';
+                const termsType = document.querySelector(`#termsLink${index + 1}`).getAttribute('href').split('#')[1];
+
+                gtag('event', 'terms_interaction', {
+                    'event_category': 'Terms & Conditions',
+                    'event_label': `${action} ${termsType}`,
+                    'terms_id': `terms${index + 1}`
+                });
+            });
+        });
+
+        // ✅ Form validation for terms
+        const jobForm = document.getElementById('jobForm');
+        jobForm.addEventListener('submit', (e) => {
+            const allTermsChecked = Array.from(termsCheckboxes).every(checkbox => checkbox.checked);
+
+            if (!allTermsChecked) {
+                e.preventDefault();
+                gtag('event', 'form_validation_failed', {
+                    'event_category': 'Form',
+                    'event_label': 'Terms not accepted',
+                    'value': 0
+                });
+
+                // Show error message
+                const toast = document.getElementById('toast');
+                toast.textContent = 'Please accept all terms and conditions';
+                toast.classList.add('show', 'error');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            } else {
+                gtag('event', 'all_terms_accepted', {
+                    'event_category': 'Terms & Conditions',
+                    'event_label': 'All terms accepted before submission'
+                });
+            }
         });
     </script>
 </body>
