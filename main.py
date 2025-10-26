@@ -59,6 +59,16 @@ def preserve_params(default_url='/', extra_params=None):
         return f"{default_url}?{urlencode(params)}"
     return default_url
 
+def get_preserved_params():
+    """
+    Returns a dictionary of preserved parameters for use in templates.
+    """
+    params = {}
+    for key, value in request.args.items():
+        if key.startswith('utm_') or key == 'gclid':
+            params[key] = value
+    return params
+
 # --- Routes ---
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -93,25 +103,30 @@ def index():
         flash("Application submitted successfully!")
         return redirect(preserve_params(url_for('submit')))
 
-    # Pass current params to template if needed (for forms, hidden inputs, etc.)
-    return render_template('index.html', query_params=request.args)
+    # Pass preserved params to template
+    preserved_params = get_preserved_params()
+    return render_template('index.html', query_params=preserved_params)
 
 # --- Terms Pages ---
 @app.route('/terms/data-collection')
 def terms_data_collection():
-    return render_template('terms_data_collection.html', query_params=request.args)
+    preserved_params = get_preserved_params()
+    return render_template('terms_data_collection.html', query_params=preserved_params)
 
 @app.route('/terms/communication')
 def terms_communication():
-    return render_template('terms_communication.html', query_params=request.args)
+    preserved_params = get_preserved_params()
+    return render_template('terms_communication.html', query_params=preserved_params)
 
 @app.route('/terms/recruitment')
 def terms_recruitment():
-    return render_template('terms_recruitment.html', query_params=request.args)
+    preserved_params = get_preserved_params()
+    return render_template('terms_recruitment.html', query_params=preserved_params)
 
 @app.route('/submit')
 def submit():
-    return render_template('submit.html', query_params=request.args)
+    preserved_params = get_preserved_params()
+    return render_template('submit.html', query_params=preserved_params)
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
@@ -120,7 +135,8 @@ def uploaded_file(filename):
 @app.route('/applications')
 def applications():
     all_applicants = Applicant.query.order_by(Applicant.submitted_at.desc()).all()
-    return render_template('applications.html', applicants=all_applicants, query_params=request.args)
+    preserved_params = get_preserved_params()
+    return render_template('applications.html', applicants=all_applicants, query_params=preserved_params)
 
 # --- Run App ---
 if __name__ == '__main__':

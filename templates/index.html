@@ -7,7 +7,11 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-7F1WP8JXBL');
+      // ✅ UPDATE: Add L1 attribution with parameters
+      gtag('config', 'G-7F1WP8JXBL', {
+          page_location: 'https://velvelt.onrender.com/', // Fake L1 URL
+          page_title: 'Jobs Next Door - Career Partner in Recruitment'
+      });
     </script>
 
     <meta charset="UTF-8">
@@ -266,39 +270,41 @@
                             </div>
                         </div>
 
-                                                <!-- Terms and Conditions Section -->
-                                               <!-- Terms and Conditions Section -->
-                        <div class="terms-checkbox-group">
-                            <div class="terms-checkbox-item">
-                                <input type="checkbox" id="terms1" name="terms1" class="terms-checkbox" required>
-                                <label for="terms1" class="terms-label">
-                                    I agree to the
-                                    <a href="{{ url_for('terms_data_collection') }}" class="terms-link" target="_blank" id="termsLink1">
-                                        Data Collection and Privacy Policy
-                                    </a>
-                                </label>
-                            </div>
+                        <!-- Terms and Conditions Section -->
+<div class="terms-checkbox-group">
+    <div class="terms-checkbox-item">
+        <input type="checkbox" id="terms1" name="terms1" class="terms-checkbox" required>
+        <label for="terms1" class="terms-label">
+            I agree to the
+            <!-- ✅ UPDATE: Add query_params to preserve parameters -->
+            <a href="{{ url_for('terms_data_collection', **query_params) }}" class="terms-link" target="_blank" id="termsLink1">
+                Data Collection and Privacy Policy
+            </a>
+        </label>
+    </div>
 
-                            <div class="terms-checkbox-item">
-                                <input type="checkbox" id="terms2" name="terms2" class="terms-checkbox" required>
-                                <label for="terms2" class="terms-label">
-                                    I consent to the
-                                    <a href="{{ url_for('terms_communication') }}" class="terms-link" target="_blank" id="termsLink2">
-                                        Communication and Contact Terms
-                                    </a>
-                                </label>
-                            </div>
+    <div class="terms-checkbox-item">
+        <input type="checkbox" id="terms2" name="terms2" class="terms-checkbox" required>
+        <label for="terms2" class="terms-label">
+            I consent to the
+            <!-- ✅ UPDATE: Add query_params to preserve parameters -->
+            <a href="{{ url_for('terms_communication', **query_params) }}" class="terms-link" target="_blank" id="termsLink2">
+                Communication and Contact Terms
+            </a>
+        </label>
+    </div>
 
-                            <div class="terms-checkbox-item">
-                                <input type="checkbox" id="terms3" name="terms3" class="terms-checkbox" required>
-                                <label for="terms3" class="terms-label">
-                                    I accept the
-                                    <a href="{{ url_for('terms_recruitment') }}" class="terms-link" target="_blank" id="termsLink3">
-                                        Recruitment Process and Job Matching Terms
-                                    </a>
-                                </label>
-                            </div>
-                        </div>
+    <div class="terms-checkbox-item">
+        <input type="checkbox" id="terms3" name="terms3" class="terms-checkbox" required>
+        <label for="terms3" class="terms-label">
+            I accept the
+            <!-- ✅ UPDATE: Add query_params to preserve parameters -->
+            <a href="{{ url_for('terms_recruitment', **query_params) }}" class="terms-link" target="_blank" id="termsLink3">
+                Recruitment Process and Job Matching Terms
+            </a>
+        </label>
+    </div>
+</div>
                         <!-- Form Actions -->
                         <div class="form-actions">
                             <button type="button" class="btn reset" id="resetBtn">Reset</button>
