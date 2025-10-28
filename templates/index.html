@@ -636,7 +636,34 @@
 
   <!-- JavaScript: file name display, form validation, loading states, basic counters -->
   <script>
-    // Enhanced GA4 Tracking Functions
+    // Enhanced GA4 Tracking Functions with Parameter Preservation
+    function getCampaignParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const campaignParams = {};
+
+        for (const [key, value] of urlParams) {
+            if (key.includes('utm_') || key === 'gclid' || key === 'fbclid' || key.includes('utm_id')) {
+                campaignParams[key] = value;
+            }
+        }
+
+        return campaignParams;
+    }
+
+    function getL1UrlWithParams(path = '') {
+        const baseUrl = 'https://velvelt.onrender.com';
+        const fullPath = path ? `${baseUrl}/${path}` : baseUrl;
+        const urlObj = new URL(fullPath);
+
+        // Add all campaign parameters
+        const campaignParams = getCampaignParams();
+        Object.entries(campaignParams).forEach(([key, value]) => {
+            urlObj.searchParams.set(key, value);
+        });
+
+        return urlObj.toString();
+    }
+
     function trackFormInteraction(action, element, value = null) {
       gtag('event', 'form_interaction', {
         event_category: 'form',
@@ -644,7 +671,8 @@
         element_type: element.type || 'button',
         element_name: element.name || element.id || 'unknown',
         value: value,
-        page_location: 'https://velvelt.onrender.com/'
+        page_location: getL1UrlWithParams(),
+        ...getCampaignParams() // Include parameters as event parameters
       });
     }
 
@@ -655,14 +683,16 @@
         form_id: 'careers_form',
         form_type: 'job_application',
         user_type: 'candidate',
-        page_location: 'https://velvelt.onrender.com/'
+        page_location: getL1UrlWithParams(),
+        ...getCampaignParams()
       });
 
       // Enhanced conversion tracking
       gtag('event', 'generate_lead', {
         currency: 'USD',
         value: 0,
-        page_location: 'https://velvelt.onrender.com/'
+        page_location: getL1UrlWithParams(),
+        ...getCampaignParams()
       });
     }
 
@@ -672,7 +702,8 @@
         event_label: action,
         button_text: button.textContent.trim(),
         button_id: button.id,
-        page_location: 'https://velvelt.onrender.com/'
+        page_location: getL1UrlWithParams(),
+        ...getCampaignParams()
       });
     }
 
@@ -683,49 +714,82 @@
         file_name: file.name,
         file_size: file.size,
         file_type: file.type,
-        page_location: 'https://velvelt.onrender.com/'
+        page_location: getL1UrlWithParams(),
+        ...getCampaignParams()
       });
     }
 
     // Enhanced event listeners with GA4 tracking
     document.addEventListener('DOMContentLoaded', function() {
-      // Track form field interactions
-      const formFields = document.querySelectorAll('input, select, textarea');
-      formFields.forEach(field => {
-        field.addEventListener('focus', () => {
-          trackFormInteraction('field_focus', field);
+        // Log parameters for debugging
+        const params = getCampaignParams();
+        if (Object.keys(params).length > 0) {
+            console.log('📋 Detected campaign parameters:', params);
+        }
+
+        // Update GA4 configuration with parameters
+        gtag('config', 'G-7F1WP8JXBL', {
+            page_location: getL1UrlWithParams(),
+            page_title: 'Apply for a Position — Careers',
+            ...params
         });
 
-        field.addEventListener('change', () => {
-          trackFormInteraction('field_change', field, field.value);
-        });
-      });
+        // Track form field interactions
+        const formFields = document.querySelectorAll('input, select, textarea');
+        formFields.forEach(field => {
+            field.addEventListener('focus', () => {
+                trackFormInteraction('field_focus', field);
+            });
 
-      // Track all button clicks
-      document.querySelectorAll('button').forEach(button => {
-        button.addEventListener('click', () => {
-          trackButtonClick(button, button.textContent.trim());
+            field.addEventListener('change', () => {
+                trackFormInteraction('field_change', field, field.value);
+            });
         });
-      });
 
-      // Track link clicks
-      document.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-          gtag('event', 'link_click', {
-            event_category: 'navigation',
-            event_label: link.textContent.trim(),
-            link_url: link.href,
-            page_location: 'https://velvelt.onrender.com/'
-          });
+        // Track all button clicks
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', () => {
+                trackButtonClick(button, button.textContent.trim());
+            });
         });
-      });
 
-      // Track page view (already handled by gtag config, but adding custom dimensions)
-      gtag('event', 'page_view', {
-        page_title: 'Apply for a Position — Careers',
-        page_location: 'https://velvelt.onrender.com/',
-        user_type: 'candidate'
-      });
+        // Track link clicks with parameter preservation
+        document.querySelectorAll('a').forEach(link => {
+            // Skip if it's already a full L1 URL
+            if (!link.href.includes('velvelt.onrender.com')) {
+                link.addEventListener('click', (e) => {
+                    gtag('event', 'link_click', {
+                        event_category: 'navigation',
+                        event_label: link.textContent.trim(),
+                        link_url: link.href,
+                        page_location: getL1UrlWithParams(),
+                        ...getCampaignParams()
+                    });
+                });
+            }
+        });
+
+        // Update terms links to include parameters
+        document.querySelectorAll('.terms-link').forEach(link => {
+            const originalHref = link.getAttribute('href');
+            if (originalHref && originalHref.includes('velvelt.onrender.com')) {
+                const urlObj = new URL(originalHref);
+                Object.entries(getCampaignParams()).forEach(([key, value]) => {
+                    urlObj.searchParams.set(key, value);
+                });
+                link.href = urlObj.toString();
+            }
+        });
+
+        // Track page view with parameters
+        gtag('event', 'page_view', {
+            page_title: 'Apply for a Position — Careers',
+            page_location: getL1UrlWithParams(),
+            user_type: 'candidate',
+            ...getCampaignParams()
+        });
+
+        console.log('✅ GA4 tracking initialized with parameter preservation');
     });
 
     // Elements
@@ -739,133 +803,174 @@
 
     // Show filename when user selects file
     cvInput.addEventListener('change', () => {
-      const file = cvInput.files[0];
-      if (!file) {
-        fileNameEl.textContent = 'Click to upload your resume (PDF, DOC, DOCX)';
-        return;
-      }
+        const file = cvInput.files[0];
+        if (!file) {
+            fileNameEl.textContent = 'Click to upload your resume (PDF, DOC, DOCX)';
+            return;
+        }
 
-      // Simple size check (5MB)
-      const maxBytes = 5 * 1024 * 1024;
-      if (file.size > maxBytes) {
-        fileNameEl.textContent = 'File too large. Max 5MB.';
-        fileNameEl.style.color = 'var(--danger)';
-        // Clear file input for user to reselect
-        cvInput.value = '';
-        return;
-      }
+        // Simple size check (5MB)
+        const maxBytes = 5 * 1024 * 1024;
+        if (file.size > maxBytes) {
+            fileNameEl.textContent = 'File too large. Max 5MB.';
+            fileNameEl.style.color = 'var(--danger)';
+            // Clear file input for user to reselect
+            cvInput.value = '';
+            return;
+        }
 
-      fileNameEl.style.color = '';
-      fileNameEl.textContent = file.name;
+        fileNameEl.style.color = '';
+        fileNameEl.textContent = file.name;
 
-      // Track file upload
-      trackFileUpload(file);
+        // Track file upload
+        trackFileUpload(file);
     });
 
     // Form client-side validation + loading state
     jobForm.addEventListener('submit', (e) => {
-      // Prevent default submission to demonstrate loading state. Remove if server submission is desired.
-      e.preventDefault();
+        // Prevent default submission to demonstrate loading state. Remove if server submission is desired.
+        e.preventDefault();
 
-      // Native constraint validation
-      if (!jobForm.checkValidity()) {
-        // Show browser validation UI
-        jobForm.reportValidity();
-        return;
-      }
+        // Native constraint validation
+        if (!jobForm.checkValidity()) {
+            // Show browser validation UI
+            jobForm.reportValidity();
+            return;
+        }
 
-      // Extra check: ensure resume chosen
-      if (!cvInput.files || cvInput.files.length === 0) {
-        cvInput.focus();
-        fileNameEl.textContent = 'Please upload your resume.';
-        fileNameEl.style.color = 'var(--danger)';
-        return;
-      }
+        // Extra check: ensure resume chosen
+        if (!cvInput.files || cvInput.files.length === 0) {
+            cvInput.focus();
+            fileNameEl.textContent = 'Please upload your resume.';
+            fileNameEl.style.color = 'var(--danger)';
+            return;
+        }
 
-      // Start loading state
-      submitBtn.disabled = true;
-      submitSpinner.style.display = 'inline-block';
-      submitText.textContent = 'Sending...';
+        // Check terms acceptance
+        const termsCheckboxes = document.querySelectorAll('.terms-checkbox');
+        const allTermsChecked = Array.from(termsCheckboxes).every(cb => cb.checked);
 
-      // Track form submission
-      const formData = new FormData(jobForm);
-      trackFormSubmission(formData);
+        if (!allTermsChecked) {
+            alert('Please accept all terms and conditions');
+            gtag('event', 'form_validation_failed', {
+                event_category: 'Form',
+                event_label: 'Terms not accepted',
+                page_location: getL1UrlWithParams(),
+                ...getCampaignParams()
+            });
+            return;
+        }
 
-      // Simulate upload and submission (replace with actual submit)
-      setTimeout(() => {
-        // End loading state
-        submitSpinner.style.display = 'none';
-        submitText.textContent = 'Sent ✓';
-        submitBtn.style.boxShadow = '0 8px 24px rgba(6,182,164,0.12)';
-        submitBtn.disabled = false;
+        // Start loading state
+        submitBtn.disabled = true;
+        submitSpinner.style.display = 'inline-block';
+        submitText.textContent = 'Sending...';
 
-        // Track successful submission
-        gtag('event', 'form_submission_success', {
-          event_category: 'conversion',
-          event_label: 'job_application_success',
-          page_location: 'https://velvelt.onrender.com/'
-        });
+        // Track form submission
+        const formData = new FormData(jobForm);
+        trackFormSubmission(formData);
 
-        // Optional: actually post the form (uncomment if desired)
-        // jobForm.submit();
+        // Simulate upload and submission (replace with actual submit)
+        setTimeout(() => {
+            // End loading state
+            submitSpinner.style.display = 'none';
+            submitText.textContent = 'Sent ✓';
+            submitBtn.style.boxShadow = '0 8px 24px rgba(6,182,164,0.12)';
+            submitBtn.disabled = false;
 
-        // Provide a brief success message (could be enhanced)
-        alert('Application submitted (demo).');
-      }, 1500);
+            // Track successful submission
+            gtag('event', 'form_submission_success', {
+                event_category: 'conversion',
+                event_label: 'job_application_success',
+                page_location: getL1UrlWithParams(),
+                ...getCampaignParams()
+            });
+
+            // Optional: actually post the form (uncomment if desired)
+            // jobForm.submit();
+
+            // Provide a brief success message
+            alert('Application submitted (demo).');
+        }, 1500);
     });
 
     // Reset button resets form and file label
     resetBtn.addEventListener('click', () => {
-      jobForm.reset();
-      fileNameEl.textContent = 'Click to upload your resume (PDF, DOC, DOCX)';
-      fileNameEl.style.color = '';
+        jobForm.reset();
+        fileNameEl.textContent = 'Click to upload your resume (PDF, DOC, DOCX)';
+        fileNameEl.style.color = '';
 
-      // Track form reset
-      gtag('event', 'form_reset', {
-        event_category: 'form',
-        event_label: 'form_reset',
-        page_location: 'https://velvelt.onrender.com/'
-      });
+        // Track form reset
+        gtag('event', 'form_reset', {
+            event_category: 'form',
+            event_label: 'form_reset',
+            page_location: getL1UrlWithParams(),
+            ...getCampaignParams()
+        });
     });
 
     // Simple animated counters for stats
     document.querySelectorAll('[data-target]').forEach(el => {
-      const target = +el.getAttribute('data-target');
-      let current = 0;
-      const step = Math.max(1, Math.floor(target / 60));
+        const target = +el.getAttribute('data-target');
+        let current = 0;
+        const step = Math.max(1, Math.floor(target / 60));
 
-      const timer = setInterval(() => {
-        current += step;
-        if (current >= target) {
-          el.textContent = target + (el.textContent.includes('%') ? '%' : '');
-          clearInterval(timer);
-        } else {
-          el.textContent = current + (el.textContent.includes('%') ? '%' : '');
-        }
-      }, 16);
+        const timer = setInterval(() => {
+            current += step;
+            if (current >= target) {
+                el.textContent = target + (el.textContent.includes('%') ? '%' : '');
+                clearInterval(timer);
+            } else {
+                el.textContent = current + (el.textContent.includes('%') ? '%' : '');
+            }
+        }, 16);
     });
 
     // keyboard accessibility: allow "Space"/"Enter" on file label (optional)
     const fileLabel = document.getElementById('fileLabel');
     fileLabel.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        cvInput.click();
-      }
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            cvInput.click();
+        }
     });
 
     // Track scroll depth
     let scrollTracked = false;
     window.addEventListener('scroll', () => {
-      if (!scrollTracked && window.scrollY > 500) {
-        gtag('event', 'scroll_depth', {
-          event_category: 'engagement',
-          event_label: '50_percent_scroll',
-          page_location: 'https://velvelt.onrender.com/'
-        });
-        scrollTracked = true;
-      }
+        if (!scrollTracked && window.scrollY > 500) {
+            gtag('event', 'scroll_depth', {
+                event_category: 'engagement',
+                event_label: '50_percent_scroll',
+                page_location: getL1UrlWithParams(),
+                ...getCampaignParams()
+            });
+            scrollTracked = true;
+        }
     });
-  </script>
+
+    // Track time on page with parameters
+    const pageStartTime = Date.now();
+    window.addEventListener('beforeunload', () => {
+        const timeSpent = Math.round((Date.now() - pageStartTime) / 1000);
+        gtag('event', 'page_time_spent', {
+            event_category: 'Engagement',
+            event_label: 'Time spent on page',
+            time_seconds: timeSpent,
+            page_location: getL1UrlWithParams(),
+            ...getCampaignParams()
+        });
+    });
+
+    // Debug function to check current parameters
+    window.debugGA4Params = function() {
+        console.log('🔍 Current Campaign Parameters:', getCampaignParams());
+        console.log('🌐 Current L1 URL:', getL1UrlWithParams());
+        console.log('📊 DataLayer events:', window.dataLayer || []);
+    };
+
+    // Uncomment the line below to enable debug mode
+    // window.debugGA4Params();
+</script>
 </body>
 </html>
