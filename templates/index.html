@@ -634,7 +634,7 @@
     </main>
   </div>
 
-  <!-- JavaScript: file name display, form validation, loading states, basic counters -->
+  <!-- Simplified JavaScript with only necessary GA4 tracking -->
   <script>
     // Enhanced GA4 Tracking Functions with Parameter Preservation
     function getCampaignParams() {
@@ -664,38 +664,6 @@
         return urlObj.toString();
     }
 
-    function trackFormInteraction(action, element, value = null) {
-      gtag('event', 'form_interaction', {
-        event_category: 'form',
-        event_label: action,
-        element_type: element.type || 'button',
-        element_name: element.name || element.id || 'unknown',
-        value: value,
-        page_location: getL1UrlWithParams(),
-        ...getCampaignParams() // Include parameters as event parameters
-      });
-    }
-
-    function trackFormSubmission(formData) {
-      gtag('event', 'form_submission', {
-        event_category: 'conversion',
-        event_label: 'job_application',
-        form_id: 'careers_form',
-        form_type: 'job_application',
-        user_type: 'candidate',
-        page_location: getL1UrlWithParams(),
-        ...getCampaignParams()
-      });
-
-      // Enhanced conversion tracking
-      gtag('event', 'generate_lead', {
-        currency: 'USD',
-        value: 0,
-        page_location: getL1UrlWithParams(),
-        ...getCampaignParams()
-      });
-    }
-
     function trackButtonClick(button, action) {
       gtag('event', 'button_click', {
         event_category: 'engagement',
@@ -719,54 +687,57 @@
       });
     }
 
-    // Enhanced event listeners with GA4 tracking
-    document.addEventListener('DOMContentLoaded', function() {
-        // Log parameters for debugging
-        const params = getCampaignParams();
-        if (Object.keys(params).length > 0) {
-            console.log('📋 Detected campaign parameters:', params);
-        }
+    function trackTermsLinkClick(link) {
+      gtag('event', 'terms_link_click', {
+        event_category: 'engagement',
+        event_label: link.textContent.trim(),
+        link_url: link.href,
+        page_location: getL1UrlWithParams(),
+        ...getCampaignParams()
+      });
+    }
 
+    function trackFormSubmission() {
+      gtag('event', 'form_submission', {
+        event_category: 'conversion',
+        event_label: 'job_application',
+        form_id: 'careers_form',
+        form_type: 'job_application',
+        user_type: 'candidate',
+        page_location: getL1UrlWithParams(),
+        ...getCampaignParams()
+      });
+
+      // Enhanced conversion tracking
+      gtag('event', 'generate_lead', {
+        currency: 'USD',
+        value: 0,
+        page_location: getL1UrlWithParams(),
+        ...getCampaignParams()
+      });
+    }
+
+    // Initialize GA4 with parameters
+    document.addEventListener('DOMContentLoaded', function() {
         // Update GA4 configuration with parameters
         gtag('config', 'G-7F1WP8JXBL', {
             page_location: getL1UrlWithParams(),
             page_title: 'Apply for a Position — Careers',
-            ...params
+            ...getCampaignParams()
         });
 
-        // Track form field interactions
-        const formFields = document.querySelectorAll('input, select, textarea');
-        formFields.forEach(field => {
-            field.addEventListener('focus', () => {
-                trackFormInteraction('field_focus', field);
-            });
-
-            field.addEventListener('change', () => {
-                trackFormInteraction('field_change', field, field.value);
-            });
-        });
-
-        // Track all button clicks
+        // Track button clicks
         document.querySelectorAll('button').forEach(button => {
             button.addEventListener('click', () => {
                 trackButtonClick(button, button.textContent.trim());
             });
         });
 
-        // Track link clicks with parameter preservation
-        document.querySelectorAll('a').forEach(link => {
-            // Skip if it's already a full L1 URL
-            if (!link.href.includes('velvelt.onrender.com')) {
-                link.addEventListener('click', (e) => {
-                    gtag('event', 'link_click', {
-                        event_category: 'navigation',
-                        event_label: link.textContent.trim(),
-                        link_url: link.href,
-                        page_location: getL1UrlWithParams(),
-                        ...getCampaignParams()
-                    });
-                });
-            }
+        // Track terms link clicks
+        document.querySelectorAll('.terms-link').forEach(link => {
+            link.addEventListener('click', () => {
+                trackTermsLinkClick(link);
+            });
         });
 
         // Update terms links to include parameters
@@ -781,15 +752,7 @@
             }
         });
 
-        // Track page view with parameters
-        gtag('event', 'page_view', {
-            page_title: 'Apply for a Position — Careers',
-            page_location: getL1UrlWithParams(),
-            user_type: 'candidate',
-            ...getCampaignParams()
-        });
-
-        console.log('✅ GA4 tracking initialized with parameter preservation');
+        console.log('✅ GA4 tracking initialized with simplified events');
     });
 
     // Elements
@@ -827,72 +790,56 @@
     });
 
     // Form client-side validation + loading state
-    jobForm.addEventListener('submit', (e) => {
-        // Prevent default submission to demonstrate loading state. Remove if server submission is desired.
-        e.preventDefault();
+    // Form client-side validation + loading state
+jobForm.addEventListener('submit', (e) => {
+    // Don't prevent default immediately - let the form submit normally after validation
+    // e.preventDefault(); // REMOVE THIS LINE
 
-        // Native constraint validation
-        if (!jobForm.checkValidity()) {
-            // Show browser validation UI
-            jobForm.reportValidity();
-            return;
-        }
+    // Native constraint validation
+    if (!jobForm.checkValidity()) {
+        // Show browser validation UI
+        e.preventDefault(); // Only prevent if validation fails
+        jobForm.reportValidity();
+        return;
+    }
 
-        // Extra check: ensure resume chosen
-        if (!cvInput.files || cvInput.files.length === 0) {
-            cvInput.focus();
-            fileNameEl.textContent = 'Please upload your resume.';
-            fileNameEl.style.color = 'var(--danger)';
-            return;
-        }
+    // Extra check: ensure resume chosen
+    if (!cvInput.files || cvInput.files.length === 0) {
+        e.preventDefault(); // Only prevent if validation fails
+        cvInput.focus();
+        fileNameEl.textContent = 'Please upload your resume.';
+        fileNameEl.style.color = 'var(--danger)';
+        return;
+    }
 
-        // Check terms acceptance
-        const termsCheckboxes = document.querySelectorAll('.terms-checkbox');
-        const allTermsChecked = Array.from(termsCheckboxes).every(cb => cb.checked);
+    // Check terms acceptance
+    const termsCheckboxes = document.querySelectorAll('.terms-checkbox');
+    const allTermsChecked = Array.from(termsCheckboxes).every(cb => cb.checked);
 
-        if (!allTermsChecked) {
-            alert('Please accept all terms and conditions');
-            gtag('event', 'form_validation_failed', {
-                event_category: 'Form',
-                event_label: 'Terms not accepted',
-                page_location: getL1UrlWithParams(),
-                ...getCampaignParams()
-            });
-            return;
-        }
+    if (!allTermsChecked) {
+        e.preventDefault(); // Only prevent if validation fails
+        alert('Please accept all terms and conditions');
+        gtag('event', 'form_validation_failed', {
+            event_category: 'Form',
+            event_label: 'Terms not accepted',
+            page_location: getL1UrlWithParams(),
+            ...getCampaignParams()
+        });
+        return;
+    }
 
-        // Start loading state
-        submitBtn.disabled = true;
-        submitSpinner.style.display = 'inline-block';
-        submitText.textContent = 'Sending...';
+    // If we passed all validations, allow the form to submit normally
+    // Start loading state
+    submitBtn.disabled = true;
+    submitSpinner.style.display = 'inline-block';
+    submitText.textContent = 'Sending...';
 
-        // Track form submission
-        const formData = new FormData(jobForm);
-        trackFormSubmission(formData);
+    // Track form submission
+    trackFormSubmission();
 
-        // Simulate upload and submission (replace with actual submit)
-        setTimeout(() => {
-            // End loading state
-            submitSpinner.style.display = 'none';
-            submitText.textContent = 'Sent ✓';
-            submitBtn.style.boxShadow = '0 8px 24px rgba(6,182,164,0.12)';
-            submitBtn.disabled = false;
-
-            // Track successful submission
-            gtag('event', 'form_submission_success', {
-                event_category: 'conversion',
-                event_label: 'job_application_success',
-                page_location: getL1UrlWithParams(),
-                ...getCampaignParams()
-            });
-
-            // Optional: actually post the form (uncomment if desired)
-            // jobForm.submit();
-
-            // Provide a brief success message
-            alert('Application submitted (demo).');
-        }, 1500);
-    });
+    // The form will now submit normally and Flask will handle the redirect
+    // Remove the setTimeout and jobForm.submit() - let the natural form submission happen
+});
 
     // Reset button resets form and file label
     resetBtn.addEventListener('click', () => {
@@ -934,43 +881,6 @@
             cvInput.click();
         }
     });
-
-    // Track scroll depth
-    let scrollTracked = false;
-    window.addEventListener('scroll', () => {
-        if (!scrollTracked && window.scrollY > 500) {
-            gtag('event', 'scroll_depth', {
-                event_category: 'engagement',
-                event_label: '50_percent_scroll',
-                page_location: getL1UrlWithParams(),
-                ...getCampaignParams()
-            });
-            scrollTracked = true;
-        }
-    });
-
-    // Track time on page with parameters
-    const pageStartTime = Date.now();
-    window.addEventListener('beforeunload', () => {
-        const timeSpent = Math.round((Date.now() - pageStartTime) / 1000);
-        gtag('event', 'page_time_spent', {
-            event_category: 'Engagement',
-            event_label: 'Time spent on page',
-            time_seconds: timeSpent,
-            page_location: getL1UrlWithParams(),
-            ...getCampaignParams()
-        });
-    });
-
-    // Debug function to check current parameters
-    window.debugGA4Params = function() {
-        console.log('🔍 Current Campaign Parameters:', getCampaignParams());
-        console.log('🌐 Current L1 URL:', getL1UrlWithParams());
-        console.log('📊 DataLayer events:', window.dataLayer || []);
-    };
-
-    // Uncomment the line below to enable debug mode
-    // window.debugGA4Params();
-</script>
+  </script>
 </body>
 </html>
