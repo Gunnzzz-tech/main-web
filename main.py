@@ -29,7 +29,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-
 # --- Database Model ---
 class Applicant(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -47,13 +46,22 @@ class Applicant(db.Model):
     source = db.Column(db.String(50), default='direct')  # 'direct' or 'bot'
     ip_address = db.Column(db.String(50))
 
+# --- Database Migration Function ---
+def migrate_database():
+    """Drop and recreate database with new schema"""
+    try:
+        db.drop_all()
+        db.create_all()
+        logger.info("✅ Database recreated with new schema")
+    except Exception as e:
+        logger.error(f"❌ Error recreating database: {e}")
+        # If drop fails, try to create anyway
+        db.create_all()
+        logger.info("✅ Database created with new schema")
 
 with app.app_context():
-    db.create_all()
+    migrate_database()
     logger.info(f"✅ Database ready: {DB_PATH}")
-    logger.info(f"📊 Database location: {os.path.abspath(DB_PATH)}")
-
-
 # --- Helper to preserve campaign/query params ---
 def preserve_params(default_url='/', extra_params=None):
     """
@@ -189,15 +197,20 @@ def uploaded_file(filename):
 
 @app.route('/applications')
 def applications():
+    print(f"🔍 DEBUG: Accessing /applications route")
+    print(f"🔍 DEBUG: Request args: {dict(request.args)}")
+    print(f"🔍 DEBUG: Request endpoint: {request.endpoint}")
+
     all_applicants = Applicant.query.order_by(Applicant.submitted_at.desc()).all()
     preserved_params = get_preserved_params()
+
+    print(f"🔍 DEBUG: Preserved params: {preserved_params}")
+    print(f"🔍 DEBUG: Applicant count: {len(all_applicants)}")
 
     # Log access to applications page
     logger.info(f"📊 Applications page accessed - Total applicants: {len(all_applicants)}")
 
     return render_template('applications.html', applicants=all_applicants, query_params=preserved_params)
-
-
 @app.route('/api/status')
 def api_status():
     """API endpoint to check application status"""
@@ -279,4 +292,4 @@ if __name__ == '__main__':
     logger.info("🚀 Starting L1 Application Server...")
     logger.info(f"📁 Upload folder: {os.path.abspath(app.config['UPLOAD_FOLDER'])}")
     logger.info(f"📊 Database: {os.path.abspath(DB_PATH)}")
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5001)
